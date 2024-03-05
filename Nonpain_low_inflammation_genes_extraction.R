@@ -1,11 +1,4 @@
-#' ---
-#' title: "Single-cell RNA-seq clustering"
-#' Integrative pipeline of integrating bulk RNA-seq with single-cell RNA-seq and then unbiased clustering
-#' author: "Fan Zhang"
-#' date: "2018-03-19"
-#' ---
-#' 
-#setwd("/Users/fanzhang/Documents/GitHub/amp_phase1_ra/R/")
+#
 rm(list=ls())
 #setwd(getwd())
 setwd("/Users/baizilong/Documents/Dana-dataset/Single_Cell_Analysis/Fibroblast_subtyping/amp_phase1_ra-master/R")
