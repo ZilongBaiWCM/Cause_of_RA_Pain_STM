@@ -1,4 +1,5 @@
-# This script aims to find pathways that are "similar" to the Neuroactive Ligand-Receptor Interaction.
+# Zilong Bai, PhD, composed this code.
+# For paper: Machine Learning Reveals Synovial Fibroblast Genes Associated with Pain Affect Sensory Nerve Growth in Rheumatoid Arthritis
 # if (!requireNamespace("BiocManager", quietly = TRUE))
 #   install.packages("BiocManager")
 rm(list=ls())
