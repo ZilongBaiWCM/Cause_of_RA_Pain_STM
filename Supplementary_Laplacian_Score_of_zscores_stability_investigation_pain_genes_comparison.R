@@ -163,4 +163,3 @@ pheatmap(mat_fishers, #color=colorRampPalette(c("green", "white","red"))(60), sc
          file=paste(save_plot_dir,fn,sep=""))
 # NOTE: All p-values are precisely zero. No heatmap generated for the p-values.
 
-# Present the correlations in boxplot. What is the best way to present correlation coefficients and p-values at the same time???
