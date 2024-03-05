@@ -1,5 +1,6 @@
 # Zilong Bai, PhD, composed this code.
 # For paper: Machine Learning Reveals Synovial Fibroblast Genes Associated with Pain Affect Sensory Nerve Growth in Rheumatoid Arthritis
+# Zilong Bai is the first author of this paper.
 #
 import numpy as np
 import pandas as pd
