@@ -1,0 +1,494 @@
+---
+title: "human ra to human drg ligand receptor final code"
+author: "Nick Bartelo"
+date: "2024-03-02"
+output: html_document
+---
+
+First we import the packages we may use.
+
+```{r, warning=FALSE, message = FALSE}
+library(BioCircos)
+```
+
+Below we import the data.
+
+```{r}
+# Ligand-coding genes from human ra results
+ra_to_hdrg_all_types <- read.csv('RA_pain_ligands_to_hDRG_snRNA_receptors_interaction_interactome_all_neurons_vs_all_others.csv', row.names = 1)
+hdrg_to_ra_all_types <- read.csv('hDRG_snRNA_ligands_to_RA_pain_receptors_interaction_interactome_all_neurons_vs_all_others.csv', row.names = 1)
+```
+
+Below we add a variable to each dataframe in order to identify if the genes are from the hdrg or RA single-cell results. We also combine the data.
+
+```{r}
+hdrg_to_ra_all_types$location <- 'hDRG'
+ra_to_hdrg_all_types$location <- 'RA sc'
+all_types_data <- rbind(hdrg_to_ra_all_types, ra_to_hdrg_all_types)
+length(unique(all_types_data$ligand))
+length(unique(all_types_data$receptor))
+
+```
+
+Below we split each dataframe by fibroblast subtype.
+
+```{r}
+print('-----------------For all types data file:--------------')
+
+all_types_data_f1 <- all_types_data[(all_types_data$ligand_type == 'SC-F1') | (all_types_data$receptor_type == 'SC-F1'),]
+print(nrow(all_types_data_f1))
+all_types_data_f2 <- all_types_data[(all_types_data$ligand_type == 'SC-F2') | (all_types_data$receptor_type == 'SC-F2'),]
+print(nrow(all_types_data_f2))
+all_types_data_f3 <- all_types_data[(all_types_data$ligand_type == 'SC-F3') | (all_types_data$receptor_type == 'SC-F3'),]
+print(nrow(all_types_data_f3))
+all_types_data_f4 <- all_types_data[(all_types_data$ligand_type == 'SC-F4') | (all_types_data$receptor_type == 'SC-F4'),]
+print(nrow(all_types_data_f4))
+```
+
+Below we get statistics for a multitude of things for all types.
+
+```{r}
+print('Order: Total Unique Ligands')
+print('Total Unique Receptors')
+print('hDRG Ligand to Synovial Receptor Connections')
+print('hDRG Ligands')
+print('hDRG Receptors')
+print('Synovial Ligand to hDRG Receptor Connections')
+print('Synovial Ligands')
+print('Synovial Receptors')
+print('-------------SC-F1------------------')
+length(unique(all_types_data_f1$ligand))
+length(unique(all_types_data_f1$receptor))
+all_types_data_f1_hdrg = all_types_data_f1[all_types_data_f1$location == 'hDRG',]
+nrow(all_types_data_f1_hdrg)
+length(unique(all_types_data_f1_hdrg$ligand))
+length(unique(all_types_data_f1_hdrg$receptor))
+all_types_data_f1_ra = all_types_data_f1[all_types_data_f1$location == 'RA sc',]
+nrow(all_types_data_f1_ra)
+length(unique(all_types_data_f1_ra$ligand))
+length(unique(all_types_data_f1_ra$receptor))
+
+print('-------------SC-F2------------------')
+length(unique(all_types_data_f2$ligand))
+length(unique(all_types_data_f2$receptor))
+all_types_data_f2_hdrg = all_types_data_f2[all_types_data_f2$location == 'hDRG',]
+nrow(all_types_data_f2_hdrg)
+length(unique(all_types_data_f2_hdrg$ligand))
+length(unique(all_types_data_f2_hdrg$receptor))
+all_types_data_f2_ra = all_types_data_f2[all_types_data_f2$location == 'RA sc',]
+nrow(all_types_data_f2_ra)
+length(unique(all_types_data_f2_ra$ligand))
+length(unique(all_types_data_f2_ra$receptor))
+
+print('-------------SC-F3------------------')
+length(unique(all_types_data_f3$ligand))
+length(unique(all_types_data_f3$receptor))
+all_types_data_f3_hdrg = all_types_data_f3[all_types_data_f3$location == 'hDRG',]
+nrow(all_types_data_f3_hdrg)
+length(unique(all_types_data_f3_hdrg$ligand))
+length(unique(all_types_data_f3_hdrg$receptor))
+all_types_data_f3_ra = all_types_data_f3[all_types_data_f3$location == 'RA sc',]
+nrow(all_types_data_f3_ra)
+length(unique(all_types_data_f3_ra$ligand))
+length(unique(all_types_data_f3_ra$receptor))
+
+print('-------------SC-F4------------------')
+length(unique(all_types_data_f4$ligand))
+length(unique(all_types_data_f4$receptor))
+all_types_data_f4_hdrg = all_types_data_f4[all_types_data_f4$location == 'hDRG',]
+nrow(all_types_data_f4_hdrg)
+length(unique(all_types_data_f4_hdrg$ligand))
+length(unique(all_types_data_f4_hdrg$receptor))
+all_types_data_f4_ra = all_types_data_f4[all_types_data_f4$location == 'RA sc',]
+nrow(all_types_data_f4_ra)
+length(unique(all_types_data_f4_ra$ligand))
+length(unique(all_types_data_f4_ra$receptor))
+```
+
+Below we specify by the three specific neuron cell types for all types before splitting by fibroblast subtype.
+
+```{r}
+print('------------AB RA-LTMR Ntrk3--------------')
+all_types_data_ab_ra_ltmr_ntrk3 <- all_types_data[(all_types_data$ligand_type == 'AB RA-LTMR Ntrk3') | (all_types_data$receptor_type == 'AB RA-LTMR Ntrk3'),]
+
+print('------------Adelta-LTMR Ntrk2--------------')
+all_types_data_adelta_ltmr_ntrk2 <- all_types_data[(all_types_data$ligand_type == 'Adelta-LTMR Ntrk2') | (all_types_data$receptor_type == 'Adelta-LTMR Ntrk2'),]
+
+print('------------C-LTMR P2ry1--------------')
+all_types_data_c_ltmr_p2ry1 <- all_types_data[(all_types_data$ligand_type == 'C-LTMR P2ry1') | (all_types_data$receptor_type == 'C-LTMR P2ry1'),]
+
+print('------------NP1 Gfra1 Gfra2--------------')
+all_types_data_np1_gfra1_gfra2 <- all_types_data[(all_types_data$ligand_type == 'NP1 Gfra1 Gfra2') | (all_types_data$receptor_type == 'NP1 Gfra1 Gfra2'),]
+
+print('------------NP2 Gfra1--------------')
+all_types_data_np2_gfra1 <- all_types_data[(all_types_data$ligand_type == 'NP2 Gfra1') | (all_types_data$receptor_type == 'NP2 Gfra1'),]
+
+print('------------NP3 Sst--------------')
+all_types_data_np3_sst <- all_types_data[(all_types_data$ligand_type == 'NP3 Sst') | (all_types_data$receptor_type == 'NP3 Sst'),]
+
+print('------------PEP1 Adcyap1--------------')
+all_types_data_pep1_adcyap1 <- all_types_data[(all_types_data$ligand_type == 'PEP1 Adcyap1') | (all_types_data$receptor_type == 'PEP1 Adcyap1'),]
+
+print('------------PEP2 Fam19a1--------------')
+all_types_data_pep2_fam19a1 <- all_types_data[(all_types_data$ligand_type == 'PEP2 Fam19a1') | (all_types_data$receptor_type == 'PEP2 Fam19a1'),]
+
+print('------------Proprioceptor & AB SA-LTMR--------------')
+all_types_data_proprioceptor_ab_sa_ltmr <- all_types_data[(all_types_data$ligand_type == 'Proprioceptor & AB SA-LTMR') | (all_types_data$receptor_type == 'Proprioceptor & AB SA-LTMR'),]
+
+print('------------PEP2 Ntrk1--------------')
+all_types_data_pep2_ntrk1 <- all_types_data[(all_types_data$ligand_type == 'PEP2 Ntrk1') | (all_types_data$receptor_type == 'PEP2 Ntrk1'),]
+```
+
+Below we look at some statistics for the unique cell types.
+
+```{r}
+print('Order: Total Unique Ligands')
+print('Total Unique Receptors')
+print('hdrg Ligand to Synovial Receptor Connections')
+print('hdrg Ligands')
+print('hdrg Receptors')
+print('Synovial Ligand to hdrg Receptor Connections')
+print('Synovial Ligands')
+print('Synovial Receptors')
+
+print('------------AB RA-LTMR Ntrk3--------------')
+length(unique(all_types_data_ab_ra_ltmr_ntrk3$ligand))
+length(unique(all_types_data_ab_ra_ltmr_ntrk3$receptor))
+all_types_data_ab_ra_ltmr_ntrk3_hdrg = all_types_data_ab_ra_ltmr_ntrk3[all_types_data_ab_ra_ltmr_ntrk3$location == 'hDRG',]
+nrow(all_types_data_ab_ra_ltmr_ntrk3_hdrg)
+length(unique(all_types_data_ab_ra_ltmr_ntrk3_hdrg$ligand))
+length(unique(all_types_data_ab_ra_ltmr_ntrk3_hdrg$receptor))
+all_types_data_ab_ra_ltmr_ntrk3_ra = all_types_data_ab_ra_ltmr_ntrk3[all_types_data_ab_ra_ltmr_ntrk3$location == 'RA sc',]
+nrow(all_types_data_ab_ra_ltmr_ntrk3_ra)
+length(unique(all_types_data_ab_ra_ltmr_ntrk3_ra$ligand))
+length(unique(all_types_data_ab_ra_ltmr_ntrk3_ra$receptor))
+print('------------Adelta-LTMR Ntrk2--------------')
+length(unique(all_types_data_adelta_ltmr_ntrk2$ligand))
+length(unique(all_types_data_adelta_ltmr_ntrk2$receptor))
+all_types_data_adelta_ltmr_ntrk2_hdrg = all_types_data_adelta_ltmr_ntrk2[all_types_data_adelta_ltmr_ntrk2$location == 'hDRG',]
+nrow(all_types_data_adelta_ltmr_ntrk2_hdrg)
+length(unique(all_types_data_adelta_ltmr_ntrk2_hdrg$ligand))
+length(unique(all_types_data_adelta_ltmr_ntrk2_hdrg$receptor))
+all_types_data_adelta_ltmr_ntrk2_ra = all_types_data_adelta_ltmr_ntrk2[all_types_data_adelta_ltmr_ntrk2$location == 'RA sc',]
+nrow(all_types_data_adelta_ltmr_ntrk2_ra)
+length(unique(all_types_data_adelta_ltmr_ntrk2_ra$ligand))
+length(unique(all_types_data_adelta_ltmr_ntrk2_ra$receptor))
+print('------------C-LTMR P2ry1--------------')
+length(unique(all_types_data_c_ltmr_p2ry1$ligand))
+length(unique(all_types_data_c_ltmr_p2ry1$receptor))
+all_types_data_c_ltmr_p2ry1_hdrg = all_types_data_c_ltmr_p2ry1[all_types_data_c_ltmr_p2ry1$location == 'hDRG',]
+nrow(all_types_data_c_ltmr_p2ry1_hdrg)
+length(unique(all_types_data_c_ltmr_p2ry1_hdrg$ligand))
+length(unique(all_types_data_c_ltmr_p2ry1_hdrg$receptor))
+all_types_data_c_ltmr_p2ry1_ra = all_types_data_c_ltmr_p2ry1[all_types_data_c_ltmr_p2ry1$location == 'RA sc',]
+nrow(all_types_data_c_ltmr_p2ry1_ra)
+length(unique(all_types_data_c_ltmr_p2ry1_ra$ligand))
+length(unique(all_types_data_c_ltmr_p2ry1_ra$receptor))
+print('------------NP1 Gfra1 Gfra2--------------')
+length(unique(all_types_data_np1_gfra1_gfra2$ligand))
+length(unique(all_types_data_np1_gfra1_gfra2$receptor))
+all_types_data_np1_gfra1_gfra2_hdrg = all_types_data_np1_gfra1_gfra2[all_types_data_np1_gfra1_gfra2$location == 'hDRG',]
+nrow(all_types_data_np1_gfra1_gfra2_hdrg)
+length(unique(all_types_data_np1_gfra1_gfra2_hdrg$ligand))
+length(unique(all_types_data_np1_gfra1_gfra2_hdrg$receptor))
+all_types_data_np1_gfra1_gfra2_ra = all_types_data_np1_gfra1_gfra2[all_types_data_np1_gfra1_gfra2$location == 'RA sc',]
+nrow(all_types_data_np1_gfra1_gfra2_ra)
+length(unique(all_types_data_np1_gfra1_gfra2_ra$ligand))
+length(unique(all_types_data_np1_gfra1_gfra2_ra$receptor))
+print('------------NP2 Gfra1--------------')
+length(unique(all_types_data_np2_gfra1$ligand))
+length(unique(all_types_data_np2_gfra1$receptor))
+all_types_data_np2_gfra1_hdrg = all_types_data_np2_gfra1[all_types_data_np2_gfra1$location == 'hDRG',]
+nrow(all_types_data_np2_gfra1_hdrg)
+length(unique(all_types_data_np2_gfra1_hdrg$ligand))
+length(unique(all_types_data_np2_gfra1_hdrg$receptor))
+all_types_data_np2_gfra1_ra = all_types_data_np2_gfra1[all_types_data_np2_gfra1$location == 'RA sc',]
+nrow(all_types_data_np2_gfra1_ra)
+length(unique(all_types_data_np2_gfra1_ra$ligand))
+length(unique(all_types_data_np2_gfra1_ra$receptor))
+print('------------NP3 Sst--------------')
+length(unique(all_types_data_np3_sst$ligand))
+length(unique(all_types_data_np3_sst$receptor))
+all_types_data_np3_sst_hdrg = all_types_data_np3_sst[all_types_data_np3_sst$location == 'hDRG',]
+nrow(all_types_data_np3_sst_hdrg)
+length(unique(all_types_data_np3_sst_hdrg$ligand))
+length(unique(all_types_data_np3_sst_hdrg$receptor))
+all_types_data_np3_sst_ra = all_types_data_np3_sst[all_types_data_np3_sst$location == 'RA sc',]
+nrow(all_types_data_np3_sst_ra)
+length(unique(all_types_data_np3_sst_ra$ligand))
+length(unique(all_types_data_np3_sst_ra$receptor))
+
+print('------------PEP1 Adcyap1--------------')
+length(unique(all_types_data_pep1_adcyap1$ligand))
+length(unique(all_types_data_pep1_adcyap1$receptor))
+all_types_data_pep1_adcyap1_hdrg = all_types_data_pep1_adcyap1[all_types_data_pep1_adcyap1$location == 'hDRG',]
+nrow(all_types_data_pep1_adcyap1_hdrg)
+length(unique(all_types_data_pep1_adcyap1_hdrg$ligand))
+length(unique(all_types_data_pep1_adcyap1_hdrg$receptor))
+all_types_data_pep1_adcyap1_ra = all_types_data_pep1_adcyap1[all_types_data_pep1_adcyap1$location == 'RA sc',]
+nrow(all_types_data_pep1_adcyap1_ra)
+length(unique(all_types_data_pep1_adcyap1_ra$ligand))
+length(unique(all_types_data_pep1_adcyap1_ra$receptor))
+
+print('------------PEP2 Fam19a1--------------')
+length(unique(all_types_data_pep2_fam19a1$ligand))
+length(unique(all_types_data_pep2_fam19a1$receptor))
+all_types_data_pep2_fam19a1_hdrg = all_types_data_pep2_fam19a1[all_types_data_pep2_fam19a1$location == 'hDRG',]
+nrow(all_types_data_pep2_fam19a1_hdrg)
+length(unique(all_types_data_pep2_fam19a1_hdrg$ligand))
+length(unique(all_types_data_pep2_fam19a1_hdrg$receptor))
+all_types_data_pep2_fam19a1_ra = all_types_data_pep2_fam19a1[all_types_data_pep2_fam19a1$location == 'RA sc',]
+nrow(all_types_data_pep2_fam19a1_ra)
+length(unique(all_types_data_pep2_fam19a1_ra$ligand))
+length(unique(all_types_data_pep2_fam19a1_ra$receptor))
+
+print('------------Proprioceptor & AB SA-LTMR--------------')
+length(unique(all_types_data_proprioceptor_ab_sa_ltmr$ligand))
+length(unique(all_types_data_proprioceptor_ab_sa_ltmr$receptor))
+all_types_data_proprioceptor_ab_sa_ltmr_hdrg = all_types_data_proprioceptor_ab_sa_ltmr[all_types_data_proprioceptor_ab_sa_ltmr$location == 'hDRG',]
+nrow(all_types_data_proprioceptor_ab_sa_ltmr_hdrg)
+length(unique(all_types_data_proprioceptor_ab_sa_ltmr_hdrg$ligand))
+length(unique(all_types_data_proprioceptor_ab_sa_ltmr_hdrg$receptor))
+all_types_data_proprioceptor_ab_sa_ltmr_ra = all_types_data_proprioceptor_ab_sa_ltmr[all_types_data_proprioceptor_ab_sa_ltmr$location == 'RA sc',]
+nrow(all_types_data_proprioceptor_ab_sa_ltmr_ra)
+length(unique(all_types_data_proprioceptor_ab_sa_ltmr_ra$ligand))
+length(unique(all_types_data_proprioceptor_ab_sa_ltmr_ra$receptor))
+
+print('------------PEP2 Ntrk1--------------')
+length(unique(all_types_data_pep2_ntrk1$ligand))
+length(unique(all_types_data_pep2_ntrk1$receptor))
+all_types_data_pep2_ntrk1_hdrg = all_types_data_pep2_ntrk1[all_types_data_pep2_ntrk1$location == 'hDRG',]
+nrow(all_types_data_pep2_ntrk1_hdrg)
+length(unique(all_types_data_pep2_ntrk1_hdrg$ligand))
+length(unique(all_types_data_pep2_ntrk1_hdrg$receptor))
+all_types_data_pep2_ntrk1_ra = all_types_data_pep2_ntrk1[all_types_data_pep2_ntrk1$location == 'RA sc',]
+nrow(all_types_data_pep2_ntrk1_ra)
+length(unique(all_types_data_pep2_ntrk1_ra$ligand))
+length(unique(all_types_data_pep2_ntrk1_ra$receptor))
+```
+
+# Circos Plots
+
+Below we create the same interactome plot from the human RA receptors to the mouse DRG ligands.
+
+```{r, fig.height=10,fig.width=10}
+# Chromosomes on which the Receptor points should be displayed
+points_chromosomes_ligand = c('Ligand', 'Ligand')
+# Coordinates on which the Receptor points should be displayed (length.out = 11 because there are 11 unique genes in the Ligand column
+points_coordinates_ligand = seq(3, 105, length.out = 16)
+# Values associated with each point, used as radial coordinate 
+# We space them out according to the number of unique ligands
+points_values_ligand = 1:length(points_coordinates_ligand)
+
+# Size of the outside of the circle for ligands and receptors
+# Since there are uniquely 16 ligands and 37 receptor genes, we make the slices of the circle 37/53*360 = 252 for the receptors and 360 - 108 for the ligands
+myGenome = list("Ligand" = 108, "Receptor" = 252)
+
+# Create circle for cell type identification to lie in
+tracklist = BioCircosBackgroundTrack("myBackgroundTrack", minRadius = 0.78, maxRadius = 1.23,
+  borderColors = "#AAAAAA", borderSize = 0.6, fillColors = "White") 
+
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_ligand, points_coordinates_ligand, shape = "rect", size = 4,
+  points_values_ligand, colors = c("blue", "white", "white", "blue", "white", "white", "blue", "white", "blue", "blue", "blue", "white", "white", "white", "white", "white"), minRadius = 1.2, maxRadius = 1.2)
+
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_ligand, points_coordinates_ligand, shape = "rect", size = 4,
+  points_values_ligand, colors = c("violet", "white", "white", "white", "violet", "white", "violet", "white", "violet", "violet", "violet", "violet", "white", "white", "white", "white"), minRadius = 1.08, maxRadius = 1.08)
+
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_ligand, points_coordinates_ligand, shape = "rect", size = 4,
+  points_values_ligand, colors = c("orange", "white", "orange", "orange", "orange", "white", "orange", "white", "white", "orange", "orange", "white", "white", "white", "white", "white"), minRadius = 0.95, maxRadius = 0.95)
+
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_ligand, points_coordinates_ligand, shape = "rect", size = 4,
+  points_values_ligand, colors = c("red", "red", "red", "white", "red", "red", "white", "red", "red", "red", "red", "red", "red", "red", "red", "red"), minRadius = 0.81, maxRadius = 0.81)
+
+# Chromosomes on which the ligand should be displayed
+points_chromosomes_receptor = c('Receptor', 'Receptor')
+# Coordinates on which the ligand should be displayed length.out = 37 
+points_coordinates_receptor = seq(3, 249, length.out = 37)
+# Values associated with each point, used as radial coordinate 
+# We space them out according to the number of unique receptors
+points_values_receptor = 1:length(points_chromosomes_receptor)
+
+# AB RA-LTMR Ntrk3:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("antiquewhite4", "antiquewhite4", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "antiquewhite4", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white"), minRadius = 0.80, maxRadius = 0.80)
+
+# Adelta-LTMR Ntrk2:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "black", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "black", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white"), minRadius = 0.844, maxRadius = 0.844)
+
+# C-LTMR P2ry1:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "white", "blue", "blue", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white"), minRadius = 0.888, maxRadius = 0.888)
+
+# NP1 Gfra1 Gfra2:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "white", "blueviolet", "white", "blueviolet", "blueviolet", "blueviolet", "white", "white", "white", "white", "white", "white", "white", "white", "white", "blueviolet", "white", "white", "white", "white", "white", "blueviolet", "blueviolet", "white", "white", "white", "blueviolet", "blueviolet", "blueviolet", "white", "white", "white", "white", "white", "white"), minRadius = 0.924, maxRadius = 0.924)
+
+# NP2 Gfra1:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "white", "white", "white", "white", "brown", "white", "brown", "white", "white", "white", "white", "white", "white", "white", "white", "brown", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "brown", "brown", "white", "white", "white", "white", "white", "white"), minRadius = 0.968, maxRadius = 0.968)
+
+# NP3 Sst:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "white", "white", "white", "white", "white", "white", "white", "cadetblue1", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "cadetblue1", "cadetblue1", "white", "white", "white", "white", "white", "white"), minRadius = 1.012, maxRadius = 1.012)
+
+# PEP1 Adcyap1:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "white", "white", "white", "white", "gold", "white", "white", "gold", "gold", "gold", "white", "white", "white", "white", "white", "white", "gold", "gold", "white", "white", "white", "white", "white", "gold", "gold", "gold", "white", "gold", "white", "gold", "gold", "white", "white", "white", "white"), minRadius = 1.056, maxRadius = 1.056)
+
+# PEP2 Fam19a1:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "darkgrey", "white", "white", "white", "darkgrey", "white", "white", "white", "white", "darkgrey", "darkgrey", "darkgrey", "darkgrey", "darkgrey", "white", "white", "white", "darkgrey", "white", "darkgrey", "darkgrey", "white", "white", "white", "darkgrey", "darkgrey", "white", "white", "white", "white", "white", "white", "darkgrey", "darkgrey", "white", "white"), minRadius = 1.10, maxRadius = 1.10)
+
+# Proprioceptor & AB SA-LTMR:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("magenta", "white", "magenta", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "magenta", "white", "white", "white", "white", "white", "white", "magenta", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "magenta"), minRadius = 1.144, maxRadius = 1.144)
+
+# PEP2 Ntrk1:
+tracklist = tracklist + BioCircosSNPTrack('Gene Type', points_chromosomes_receptor, points_coordinates_receptor, 
+  points_values_receptor, colors = c("white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "wheat2", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "white", "wheat2", "white", "white", "wheat2", "white"), minRadius = 1.188, maxRadius = 1.188)
+
+#tracklist = tracklist + BioCircosTextTrack("testText", 'mDRG to Synovial Fibroblast', weight = "bold", size = '1em', x = -0.46, y = -1.25, displayGenomeBorder = TRUE)
+
+links_chromosomes_1 = c('Receptor', 'Receptor', 'Receptor') # Chromosomes on which the links should start
+links_chromosomes_2 = c('Ligand', 'Ligand', 'Ligand') # Chromosomes on which the links should end
+
+# Coordinates to place start of links. The coordinates below correspond to the sequence given by seq(3, 249, length.out = 37) Their starting coordinate must be repeated for the number of connections between them and the number of ligands they are connected to.
+links_pos_1 = c(3, 3, 3, 3, 9.83, 16.67, 16.67, 23.5, 30.33, 23.5, 23.5, 30.33, 23.5, 23.5, 37.17, 44, 23.5, 37.17, 44, 23.5, 37.17, 44, 23.5, 50.83, 44, 44, 57.67, 44, 57.67, 64.5, 64.5, 64.5, 71.33, 64.5, 78.17, 44, 71.33, 64.5, 78.17, 44, 71.33, 64.5, 78.17, 44, 71.33, 78.17, 85, 71.33, 91.83, 78.17, 37.17, 85, 71.33, 91.83, 78.17, 98.67, 37.17, 85, 71.33, 85, 78.17, 98.67, 37.17, 85, 71.33, 91.83, 78.17, 9.83, 98.67, 3, 3, 3, 16.67, 105.5, 3, 16.67, 112.33, 119.17, 119.17, 126, 132.83, 126, 139.67, 146.5, 139.67, 132.83, 153.33, 160.17, 112.33, 160.17, 167, 119.17, 119.17, 126, 132.83, 173.83, 180.67, 187.5, 126, 139.67, 146.5, 180.67, 187.5, 139.67, 132.83, 153.33, 119.17, 119.17, 126, 132.83, 126, 139.67, 146.5, 132.83, 153.33, 160.17, 112.33, 194.33, 160.17, 167, 201.17, 208, 119.17, 201.17, 208, 119.17, 201.17, 208, 214.83, 126, 126, 132.83, 173.83, 180.67, 187.5, 201.17, 221.67, 126, 139.67, 126, 126, 139.67, 146.5, 173.83, 180.67, 126, 228.5, 235.33, 139.67, 242.17, 132.83, 221.67, 249, 153.33)
+
+# Coordinates to place end of links. The coordinates below correspond to the sequence given by seq(3, 105, length.out = 16)
+links_pos_2 = c(3, 3, 3, 3, 9.8, 16.6, 16.6, 3, 23.4, 3, 3, 23.4, 3, 3, 30.2, 30.2, 3, 30.2, 30.2, 3, 30.2, 30.2, 3, 37, 30.2, 30.2, 16.6, 30.2, 16.6, 43.8, 43.8, 43.8, 3, 43.8, 3, 30.2, 3, 43.8, 3, 30.2, 3, 43.8, 3, 30.2, 3, 3, 3, 3, 3, 3, 30.2, 3, 3, 3, 3, 30.2, 30.2, 3, 3, 3, 3, 30.2, 30.2, 3, 3, 3, 3, 9.8, 30.2, 3, 3, 3, 16.6, 50.6, 3, 16.6, 57.4, 64.2, 64.2, 71, 71, 71, 71, 71, 57.4, 71, 64.2, 77.8, 57.4, 77.8, 77.8, 64.2, 64.2, 71, 71, 77.8, 77.8, 77.8, 71, 71, 71, 77.8, 77.8, 57.4, 71, 64.2, 64.2, 64.2, 71, 71, 71, 71, 71, 71, 64.2, 77.8, 57.4, 50.6, 77.8, 77.8, 84.6, 91.4, 64.2, 84.6, 91.4, 64.2, 84.6, 91.4, 50.6, 98.2, 71, 71, 77.8, 77.8, 77.8, 84.6, 84.6, 84.6, 50.6, 98.2, 71, 71, 71, 77.8, 77.8, 84.6, 105, 91.4, 57.4, 50.6, 71, 84.6, 105, 64.2)
+
+# The labels are given at the end of the link. 
+links_labels_12 = c("FGFR1", "", "", "", "ANK3", "CDON", "", "", "TGFBR3", "", "", "", "", "", "ITGB5", "", "", "", "", "", "", "", "", "HRH1", "", "", "", "", "", "LPAR1", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "APP", "", "", "TFPI", "TIMP2", "", "CTGF", "", "", "", "", "", "", "", "EFNA5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "HBEGF", "SEMA3E", "", "", "", "", "", "", "", "BTC", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "NTN4", "", "", "", "", "", "", "") 
+
+tracklist = tracklist + BioCircosLinkTrack('myLinkTrack', links_chromosomes_1, links_pos_1,
+  links_pos_1, links_chromosomes_2, links_pos_2, links_pos_2,
+  maxRadius = 0.5, width = "0.01em", color = 'cornflowerblue', labelSize = "0.9em", labels = links_labels_12)
+
+links_chromosomes_3 = c('Ligand', 'Ligand', 'Ligand') # Chromosomes on which the links should start
+links_chromosomes_4 = c('Receptor', 'Receptor', 'Receptor') # Chromosomes on which the links should end
+
+# Now we start at the ligands
+links_pos_3 = c(3, 3, 3, 3, 9.8, 16.6, 16.6, 3, 23.4, 3, 3, 23.4, 3, 3, 30.2, 30.2, 3, 30.2, 30.2, 3, 30.2, 30.2, 3, 37, 30.2, 30.2, 16.6, 30.2, 16.6, 43.8, 43.8, 43.8, 3, 43.8, 3, 30.2, 3, 43.8, 3, 30.2, 3, 43.8, 3, 30.2, 3, 3, 3, 3, 3, 3, 30.2, 3, 3, 3, 3, 30.2, 30.2, 3, 3, 3, 3, 30.2, 30.2, 3, 3, 3, 3, 9.8, 30.2, 3, 3, 3, 16.6, 50.6, 3, 16.6, 57.4, 64.2, 64.2, 71, 71, 71, 71, 71, 57.4, 71, 64.2, 77.8, 57.4, 77.8, 77.8, 64.2, 64.2, 71, 71, 77.8, 77.8, 77.8, 71, 71, 71, 77.8, 77.8, 57.4, 71, 64.2, 64.2, 64.2, 71, 71, 71, 71, 71, 71, 64.2, 77.8, 57.4, 50.6, 77.8, 77.8, 84.6, 91.4, 64.2, 84.6, 91.4, 64.2, 84.6, 91.4, 50.6, 98.2, 71, 71, 77.8, 77.8, 77.8, 84.6, 84.6, 84.6, 50.6, 98.2, 71, 71, 71, 77.8, 77.8, 84.6, 105, 91.4, 57.4, 50.6, 71, 84.6, 105, 64.2)
+# Now we end at the receptors
+links_pos_4 = c(3, 3, 3, 3, 9.83, 16.67, 16.67, 23.5, 30.33, 23.5, 23.5, 30.33, 23.5, 23.5, 37.17, 44, 23.5, 37.17, 44, 23.5, 37.17, 44, 23.5, 50.83, 44, 44, 57.67, 44, 57.67, 64.5, 64.5, 64.5, 71.33, 64.5, 78.17, 44, 71.33, 64.5, 78.17, 44, 71.33, 64.5, 78.17, 44, 71.33, 78.17, 85, 71.33, 91.83, 78.17, 37.17, 85, 71.33, 91.83, 78.17, 98.67, 37.17, 85, 71.33, 85, 78.17, 98.67, 37.17, 85, 71.33, 91.83, 78.17, 9.83, 98.67, 3, 3, 3, 16.67, 105.5, 3, 16.67, 112.33, 119.17, 119.17, 126, 132.83, 126, 139.67, 146.5, 139.67, 132.83, 153.33, 160.17, 112.33, 160.17, 167, 119.17, 119.17, 126, 132.83, 173.83, 180.67, 187.5, 126, 139.67, 146.5, 180.67, 187.5, 139.67, 132.83, 153.33, 119.17, 119.17, 126, 132.83, 126, 139.67, 146.5, 132.83, 153.33, 160.17, 112.33, 194.33, 160.17, 167, 201.17, 208, 119.17, 201.17, 208, 119.17, 201.17, 208, 214.83, 126, 126, 132.83, 173.83, 180.67, 187.5, 201.17, 221.67, 126, 139.67, 126, 126, 139.67, 146.5, 173.83, 180.67, 126, 228.5, 235.33, 139.67, 242.17, 132.83, 221.67, 249, 153.33)
+# These links are for the receptors
+links_labels_34 = c("FGF9", "", "", "", "NFASC", "SHH", "", "FGF10", "TGFB1", "", "", "", "", "", "ADAM9", "EDIL3", "", "", "", "", "", "", "", "HDC", "", "", "IHH", "", "", "LIPH", "", "", "FGF14", "", "NCAM1", "", "", "", "", "", "", "", "", "", "", "", "FGF12", "", "FGF5", "", "", "", "", "", "", "SORBS1", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "CLSTN1", "", "", "VLDLR", "ITGA3", "", "ERBB4", "NTRK1", "", "LRP1", "LRP6", "", "", "ITGB1", "EPHA6", "", "", "EPHA7", "", "", "", "", "EPHA3", "EPHA5", "EPHB1", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "GPC1", "", "", "CD44", "PLXND1", "", "", "", "", "", "", "CAV1", "", "", "", "", "", "", "", "CD9", "", "", "", "", "", "", "", "", "", "DCC", "NRP1", "", "NGFR", "", "", "UNC5A", "") 
+
+tracklist = tracklist + BioCircosLinkTrack('myLinkTrack', links_chromosomes_3, links_pos_3,
+  links_pos_3, links_chromosomes_4, links_pos_4, links_pos_4,
+  maxRadius = 0.5, width = "0.01em", color = 'cornflowerblue', labelSize = "0.9em", labels = links_labels_34, labelPadding = 3)
+
+links_chromosomes_5 = c('Receptor', 'Receptor', 'Receptor') # Chromosomes on which the links should start
+links_chromosomes_6 = c('Ligand', 'Ligand', 'Ligand') # Chromosomes on which the links should end
+links_pos_5 = c(3, 3, 3, 3, 9.83, 16.67, 16.67, 23.5, 30.33, 23.5, 23.5, 30.33, 23.5, 23.5, 37.17, 44, 23.5, 37.17, 44, 23.5, 37.17, 44, 23.5, 50.83, 44, 44, 57.67, 44, 57.67, 64.5, 64.5, 64.5, 71.33, 64.5, 78.17, 44, 71.33, 64.5, 78.17, 44, 71.33, 64.5, 78.17, 44, 71.33, 78.17, 85, 71.33, 91.83, 78.17, 37.17, 85, 71.33, 91.83, 78.17, 98.67, 37.17, 85, 71.33, 85, 78.17, 98.67, 37.17, 85, 71.33, 91.83, 78.17, 9.83, 98.67, 3, 3, 3, 16.67, 105.5, 3, 16.67)
+links_pos_6 = c(3, 3, 3, 3, 9.8, 16.6, 16.6, 3, 23.4, 3, 3, 23.4, 3, 3, 30.2, 30.2, 3, 30.2, 30.2, 3, 30.2, 30.2, 3, 37, 30.2, 30.2, 16.6, 30.2, 16.6, 43.8, 43.8, 43.8, 3, 43.8, 3, 30.2, 3, 43.8, 3, 30.2, 3, 43.8, 3, 30.2, 3, 3, 3, 3, 3, 3, 30.2, 3, 3, 3, 3, 30.2, 30.2, 3, 3, 3, 3, 30.2, 30.2, 3, 3, 3, 3, 9.8, 30.2, 3, 3, 3, 16.6, 50.6, 3, 16.6)
+links_labels_56 = c("", "", '', '', '', '', '', '', "", '', '', '', "", '', "", "", "", '', '', '', '', '', '', "", '', '', '', "", '', "", "", "", '', '', '', '', '', '', "", '', '', '', "", '', "", "", "", '', '', '', '', '', '', "", '', '', '', "", '', "", "", "", '', '', '', '', '', '', "", '', '', '', "", '', "", "")
+
+tracklist = tracklist + BioCircosLinkTrack('myLinkTrack', links_chromosomes_5, links_pos_5,
+  links_pos_5, links_chromosomes_6, links_pos_6, links_pos_6,
+  maxRadius = 0.5, width = "0.02em", color = 'brown', labelSize = "0.9em", labels = links_labels_56)
+
+# Create inside arc for RA scRNA gene identification
+arcs_chromosomes_ra = c('Receptor') # Chromosomes on which the arcs should be displayed
+arcs_begin_ra = c(0)
+arcs_end_ra = c(252)
+
+#tracklist = tracklist + BioCircosArcTrack('myArcTrack', arcs_chromosomes_ra, arcs_begin_ra, arcs_end_ra, minRadius = 1.25, maxRadius = 1.30, colors = 'forestgreen') 
+
+# Create inside arc for RA scRNA gene identification
+arcs_chromosomes_hdrg = c('Ligand') # Chromosomes on which the arcs should be displayed
+arcs_begin_hdrg = c(0)
+arcs_end_hdrg = c(108)
+
+# Make specific pain genes bold for RA
+links_chromosomes_7 = c('Ligand', 'Ligand', 'Ligand') # Chromosomes on which the links should start
+links_chromosomes_8 = c('Receptor', 'Receptor', 'Receptor') # Chromosomes on which the links should end
+links_pos_7 = c(rep(3, 10), rep(9.8, 10), rep(16.6, 10), rep(3, 10), rep(23.4, 10), rep(30.2, 10), rep(30.2, 10), rep(37, 10), rep(16.6, 10), rep(43.8, 10), rep(3, 10), rep(3, 10), rep(3, 10), rep(3, 10), rep(30.2, 10), rep(50.6, 10), rep(57.4, 10), rep(64.2, 10), rep(71, 10), rep(71, 10), rep(71, 10), rep(71, 10), rep(64.2, 10), rep(77.8, 10), rep(77.8, 10), rep(77.8, 10), rep(77.8, 10), rep(77.8, 10), rep(50.6, 10), rep(84.6, 10), rep(91.4, 10), rep(50.6, 10), rep(84.6, 10), rep(105, 10), rep(91.4, 10), rep(50.6, 10), rep(105, 10))
+links_pos_8 = c(rep(3, 10), rep(9.83, 10), rep(16.67, 10), rep(23.5, 10), rep(30.33, 10), rep(37.17, 10), rep(44, 10), rep(50.83, 10), rep(57.67, 10), rep(64.5, 10), rep(71.33, 10), rep(78.17, 10), rep(85, 10), rep(91.83, 10), rep(98.67, 10), rep(105.5, 10), rep(112.33, 10), rep(119.17, 10), rep(126, 10), rep(132.83, 10), rep(139.67, 10), rep(146.5, 10), rep(153.33, 10), rep(160.17, 10), rep(167, 10), rep(173.83, 10), rep(180.67, 10), rep(187.5, 10), rep(194.33, 10), rep(201.17, 10), rep(208, 10), rep(214.83, 10), rep(221.67, 10), rep(228.5, 10), rep(235.33, 10), rep(242.17, 10), rep(249, 10)) 
+links_labels_78 = c(rep("FGF9", 10), rep("NFASC", 10), rep("SHH", 10), rep("FGF10", 10), rep("TGFB1", 10), rep("ADAM9", 10), rep("EDIL3", 10), rep("HDC", 10), rep("IHH", 10), rep("LIPH", 10), rep("FGF14", 10), rep("NCAM1", 10), rep("FGF12", 10), rep("FGF5", 10), rep("SORBS1", 10), rep("CLSTN1", 10), rep("VLDLR", 10), rep("ITGA3", 10), rep("ERBB4", 10), rep("NTRK1", 10), rep("LRP1", 10), rep("LRP6", 10), rep("ITGB1", 10), rep("EPHA6", 10), rep("EPHA7", 10), rep("EPHA3", 10), rep("EPHA5", 10), rep("EPHB1", 10), rep("GPC1", 10), rep("CD44", 10), rep("PLXND1", 10), rep("CAV1", 10), rep("CD9", 10), rep("DCC", 10), rep("NRP1", 10), rep("NGFR", 10), rep("UNC5A", 10))
+
+tracklist = tracklist + BioCircosLinkTrack('myLinkTrack', links_chromosomes_7, links_pos_7,
+  links_pos_7, links_chromosomes_8, links_pos_8, links_pos_8,
+  maxRadius = 0.5, width = "0em", color = 'brown', labelSize = "0.9em", labels = links_labels_78)
+
+# Make specific pain genes bold for hDRG
+links_chromosomes_9 = c('Receptor', 'Receptor', 'Receptor') # Chromosomes on which the links should start
+links_chromosomes_10 = c('Ligand', 'Ligand', 'Ligand') # Chromosomes on which the links should end
+
+links_pos_9 = c(rep(3, 10), rep(9.83, 10), rep(16.67, 10), rep(23.5, 10), rep(37.17, 10), rep(50.83, 10), rep(64.5, 10), rep(105.5, 10), rep(112.33, 10), rep(119.17, 10), rep(126, 10), rep(160.17, 10), rep(201.17, 10), rep(208, 10), rep(126, 10), rep(228.5, 10)) 
+links_pos_10 = c(rep(3, 10), rep(9.8, 10), rep(16.6, 10), rep(23.4, 10), rep(30.2, 10), rep(37, 10), rep(43.8, 10), rep(50.6, 10), rep(57.4, 10), rep(64.2, 10), rep(71, 10), rep(77.8, 10), rep(84.6, 10), rep(91.4, 10), rep(98.2, 10), rep(105, 10))
+links_labels_910 = c(rep("FGFR1", 10), rep("ANK3", 10), rep("CDON", 10), rep("TGFBR3", 10), rep("ITGB5", 10), rep("HRH1", 10), rep("LPAR1", 10), rep("APP", 10), rep("TFPI", 10), rep("TIMP2", 10), rep("CTGF", 10), rep("EFNA5", 10), rep("HBEGF", 10), rep("SEMA3E", 10), rep("BTC", 10), rep("NTN4", 10))
+
+tracklist = tracklist + BioCircosLinkTrack('myLinkTrack', links_chromosomes_9, links_pos_9,
+  links_pos_9, links_chromosomes_10, links_pos_10, links_pos_10,
+  maxRadius = 0.5, width = "0em", color = 'brown', labelSize = "0.9em", labels = links_labels_910)
+
+#tracklist = tracklist + BioCircosArcTrack('myArcTrack', arcs_chromosomes_hdrg, arcs_begin_hdrg, arcs_end_hdrg, minRadius = 1.25, maxRadius = 1.30, colors = 'deeppink3')
+
+#tracklist = tracklist + BioCircosTextTrack('MytextTrack', 'Human RA to Mouse DRG - All Cell Types Subset to Neurons', x = -1, y = -1.37, size = "1em",
+#  weight = "bold", opacity = 1, color = "#000000")
+
+#tracklist = tracklist + BioCircosTextTrack('MytextTrack', 'Ligand', x = 0.85, y = -1.1, size = "1em",
+#  weight = "bold", opacity = 1, color = "#000000")
+
+#tracklist = tracklist + BioCircosTextTrack('MytextTrack', 'Receptor', x = -1.05, y = -1.1, size = "1em",
+#  weight = "bold", opacity = 1, color = "#000000")
+
+#tracklist = tracklist + BioCircosArcTrack('myArcTrack', arcs_chromosomes, arcs_begin, arcs_end, minRadius = 0.85, maxRadius = 0.99, colors = 'forestgreen') 
+
+BioCircos(tracklist, genome = myGenome, genomeFillColor = c('white', 'white'), chrPad = 0.05, displayGenomeBorder = FALSE, yChr =  FALSE,
+  genomeTicksDisplay = FALSE,  genomeLabelTextSize = 0, genomeLabelDy = 0, width = 650, height = 650)
+```
+
+Below we create plots for the number of connections for hDRG to RA and RA to hDRG.
+
+```{r}
+svg("human_interactome_connections.svg",width=6, height=3)
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", legend =c('Human Nervous System to Synovial Fibroblast (76 connections)', 'Synovial Fibroblast to Human Nervous System (78 connections)'), bty='n', lwd = 8, cex = 1.2, col = c('brown', 'cornflowerblue'), lty = c(1, 1, 1, 1), pch = c(NA, NA, NA, NA))
+ #   col = c('brown', 'cyan'))
+#mtext("mDRG Neuronal Cell Types", at=0.19, cex=1.1)
+dev.off()
+```
+
+Below we plot the legend for the cell types.
+
+```{r}
+svg("fibroblast_synovial_to_human.svg",width=10, height=3)
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", legend =c('CD34+ sublining fibroblasts (SC-F1) (11 Connections)', 'HLA-DRAhi sublining fibroblasts (SC-F2) (19 Connections)', 'DKK3+ sublining fibroblasts (SC-F3) (9 Connections)', 'CD55+ lining fibroblasts (SC-F4) (39 Connections)'), pch=15, pt.cex=3, cex=1.2, bty='n',
+    col = c('blue', 'violet', 'orange', 'red'))
+mtext("Synovial Fibroblast Connections Synovial Fibroblast to Human Nervous System", at=0.34, cex=1.3)
+dev.off()
+```
+
+```{r}
+svg("fibroblast_human_to_synovial.svg", width=10, height=3)
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", legend =c('CD34+ sublining fibroblasts (SC-F1) (13 Connections)', 'HLA-DRAhi sublining fibroblasts (SC-F2) (18 Connections)', 'DKK3+ sublining fibroblasts (SC-F3) (22 Connections)', 'CD55+ lining fibroblasts (SC-F4) (23 Connections)'), pch=15, pt.cex=3, cex=1.2, bty='n',
+    col = c('blue', 'violet', 'orange', 'red'))
+mtext("Synovial Fibroblast Connections Human Nervous System to Synovial Fibroblast", at=0.34, cex=1.3)
+```
+
+Below we create the connections legend for the cell types for ligands.
+
+```{r}
+svg("neuronal_human_to_synovial.svg", width=10, height=4)
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", legend =c('AB RA-LTMR Ntrk3 (5 Connections)', 'Adelta-LTMR Ntrk2 (2 Connections)', 'C-LTMR P2ry1 (6 Connections)', 'NP1 Gfra1 Gfra2 (11 Connections)', 'NP2 Gfra1 (5 Connections)', 'NP3 Sst (3 Connections)', 'PEP1 Adcyap1 (14 Connections)', 'PEP2 Fam19a1 (23 Connections)', 'Proprioceptor & AB SA-LTMR (7 Connections)', 'PEP2 Ntrk1 (0 Connections)'), pch=16, pt.cex=1, cex=0.95, bty='n',
+    col = c('antiquewhite4', 'black', 'blue', 'blueviolet', 'brown', 'cadetblue1', 'gold', 'darkgrey', 'magenta', 'wheat2'))
+mtext("Neuronal Cell Type Connections Human Nervous System to Synovial Fibroblast", at=0.3, cex=1.1)
+```
+
+Below we create the connections legend for the cell types for receptors.
+
+```{r}
+svg("neuronal_synovial_to_human.svg", width=10, height=4)
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", legend =c('AB RA-LTMR Ntrk3 (2 Connections)', 'Adelta-LTMR Ntrk2 (3 Connections)', 'C-LTMR P2ry1 (0 Connections)', 'NP1 Gfra1 Gfra2 (11 Connections)', 'NP2 Gfra1 (6 Connections)', 'NP3 Sst (2 Connections)', 'PEP1 Adcyap1 (19 Connections)', 'PEP2 Fam19a1 (24 Connections)', 'Proprioceptor & AB SA-LTMR (5 Connections)', 'PEP2 Ntrk1 (6 Connections)'), pch=16, pt.cex=1, cex=0.95, bty='n',
+    col = c('antiquewhite4', 'black', 'blue', 'blueviolet', 'brown', 'cadetblue1', 'gold', 'darkgrey', 'magenta', 'wheat2'))
+mtext("Neuronal Cell Type Connections Synovial Fibroblast to Human Nervous System", at=0.3, cex=1.1)
+```
+
