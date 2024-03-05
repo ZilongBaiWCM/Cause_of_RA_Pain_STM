@@ -1,4 +1,3 @@
-# This script aims to find pathways that are "similar" to the Neuroactive Ligand-Receptor Interaction.
 # if (!requireNamespace("BiocManager", quietly = TRUE))
 #   install.packages("BiocManager")
 rm(list=ls())
