@@ -151,12 +151,7 @@ print(dim(umi_seurat))
 #dev.copy(pdf,paste(save_dir, 'DoHeatmap_all_new_subtypes.pdf', sep=""))
 #dev.off()
 
-# TODO: 
-# 1. align the columns to specific cell types. Is it done? Yes, actually. Need to put them on top of the columns to indicate.
-# 2. need to access the visualization problem. Why are they not visualized in a correct way?
-# some rows are zeros?
-# also, why is the data not scaled?
-# dev.off()
+
 
 
 
