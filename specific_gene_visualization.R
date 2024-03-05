@@ -1,11 +1,7 @@
-#' ---
-#' title: 
-#' 
-#' author: "Zilong Bai"
-#' date: "2023-02-23"
-#' ---
-#' 
-#setwd("/Users/fanzhang/Documents/GitHub/amp_phase1_ra/R/")
+# Zilong Bai, PhD, composed this code.
+# For paper: Machine Learning Reveals Synovial Fibroblast Genes Associated with Pain Affect Sensory Nerve Growth in Rheumatoid Arthritis
+# Zilong Bai is the first author of this paper.
+#
 rm(list=ls())
 #setwd(getwd())
 setwd("/Users/baizilong/Documents/Dana-dataset/Single_Cell_Analysis/Fibroblast_subtyping/amp_phase1_ra-master/R")
@@ -35,10 +31,7 @@ source("pure_functions.R")
 
 
 
-# Read the post-QC single-cell RNA-seq expression data and meta data
-#dat <- readRDS(file = paste("../data/celseq_synovium_log2_postQC", ".rds", sep = ""))
-## NOTE: We are now using the normalized data provided by Dr. Fan Zhang. 
-## We compute the normalized counts with different normalization functions from the raw counts
+
 sc_dir <- "/Users/baizilong/Documents/Dana-dataset/Single_Cell_Analysis/Fibroblast_subtyping/amp_phase1_ra-master/data/"
 fn_nd = paste(sc_dir,"celseq_synovium_log2_5265cells_paper.rds", sep="")
 
