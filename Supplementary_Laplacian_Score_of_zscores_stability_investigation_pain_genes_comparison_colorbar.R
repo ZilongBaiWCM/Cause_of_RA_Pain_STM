@@ -1,5 +1,6 @@
 # Zilong Bai, PhD, composed this code.
 # For paper: Machine Learning Reveals Synovial Fibroblast Genes Associated with Pain Affect Sensory Nerve Growth in Rheumatoid Arthritis
+# Zilong Bai is the first author of this paper.
 # if (!requireNamespace("BiocManager", quietly = TRUE))
 #   install.packages("BiocManager")
 rm(list=ls())
