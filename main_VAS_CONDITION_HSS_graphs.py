@@ -1,8 +1,6 @@
 # Zilong Bai, PhD, composed this code.
 # For paper: Machine Learning Reveals Synovial Fibroblast Genes Associated with Pain Affect Sensory Nerve Growth in Rheumatoid Arthritis
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+#
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import kneighbors_graph
