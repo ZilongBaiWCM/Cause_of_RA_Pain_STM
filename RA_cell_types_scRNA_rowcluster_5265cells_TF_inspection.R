@@ -28,40 +28,9 @@ require(gdata)
 source("meta_colors.R")
 source("pure_functions.R")
 
-# -------
-# Main steps
-# 1) We first selected the highly variable genes from both sides that we 
-#    can keep the data set specific variation; 
-# 2) Based on the shared highly variable genes, we integrate single-cell RNA-seq 
-#    with bulk RNA-seq by CCA (González et al. 2008); 
-# 3) We calculate the cell-to-cell similarity matrix on top 10 CCA canonical 
-#    dimensions based on Euclidean distance;
-# 4) We build up a K-nearest neighbors (KNN) graph based on the cell-to-cell similarity matrix; 
-#    We then convert the KNN neighbor relation matrix into an adjacency matrix; 
-# 5) We cluster the cells using Infomap algorithm (cluster_infomap function from igraph package) 
-#    for community detection to decompose the cell-to-cell adjacency matrix into major modules; 
-# 6) We then construct a low dimensional embedding using tSNE based on 
-#    the cell-to-cell distance matrix with cell clusters labeled; 
-# 7) We identify and prioritize significantly differential expressed (DE) genes for 
-#    each distinct cluster using AUC and Wilcox test; 
-# 8) For pathway analysis, we downloaded gene sets from Gene Ontology (GO) terms on April 2016. 
-#    We also use the immunologic signatures from 4,872 hallmark gene sets from MSigDB (Liberzon et al. 2015)
-#    to test enrichment of all the tested DE genes sorted by decreased AUC scores 
-#    for each cluster using liger.
-#
-# NOTE: 
-# 1) coarse clustering and fine clustering follow the same pipeline
-#    For fine clustering, please run the piepeline on cells from one cell type 
-# 2) Since graph-based clustering is based on random walk (a stochastic process), the results depand on nk (KNN step), 
-#    and also the number dimensions ncc (CCA step), and the number of selected features as well.
-# 
-# -------
 
 
-# Read the post-QC single-cell RNA-seq expression data and meta data
-#dat <- readRDS(file = paste("../data/celseq_synovium_log2_postQC", ".rds", sep = ""))
-## NOTE: We are now using the normalized data provided by Dr. Fan Zhang. 
-## We compute the normalized counts with different normalization functions from the raw counts
+
 sc_dir <- "/Users/baizilong/Documents/Dana-dataset/Single_Cell_Analysis/Fibroblast_subtyping/amp_phase1_ra-master/data/"
 fn_nd = paste(sc_dir,"celseq_synovium_log2_5265cells_paper.rds", sep="")
 
